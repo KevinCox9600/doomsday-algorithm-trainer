@@ -3,6 +3,11 @@ from datetime import timedelta, datetime
 import time
 from colorama import Fore, Back, Style
 
+B = ""  # Back.MAGENTA  # + Fore.CYAN
+R = Back.RED
+Y = Back.YELLOW + Fore.BLACK
+r = Style.RESET_ALL
+
 
 def main():
     i = "init"
@@ -15,8 +20,9 @@ def main():
             random_date = generate_random_date(start_date, end_date)
 
             # ask user for date
+            date_string = random_date.strftime("%m/%d/%Y")
             i = input(
-                f"What day of the week is {random_date}? Number 0-6 (sunday - monday)\n"
+                f"What day of the week is {date_string}? Number 0-6 (sunday - monday)\n"
             )
 
             # switch to config mode if necessary
@@ -44,36 +50,41 @@ def explain_logic(date):
     month = date.month
     day = date.day
 
-    # year explanation
     # century doomsday
-    my_print(Back.RED + "CENTURY:" + Style.RESET_ALL)
+    my_print(Y + "CENTURY:")
     century = year // 100
     century_doomsdays = {0: 2, 1: 0, 2: 5, 3: 3}
     century_doomsday = century_doomsdays[century % 4]
-    my_print(f"{century}00's doomsday is {century_doomsday}\n")
+    my_print(f"{century}00's doomsday is {R}{century_doomsday}", True)
+
     # decade doomsday
+    my_print(Y + "DECADE:")
     decade = year % 100
     mults_of_12 = decade // 12
     remainder_of_12 = decade % 12
     leap_year_addition = remainder_of_12 // 4
     addition_beyond_mult_of_12 = remainder_of_12 + leap_year_addition
     my_print(f"The decade can be broken into {mults_of_12 * 12} + {remainder_of_12}")
-    my_print(f"The {mults_of_12 * 12} corresponds to a day index of {mults_of_12}")
+    my_print(f"The {mults_of_12 * 12} corresponds to a day index of {B}{mults_of_12}")
     my_print(
         f"The {remainder_of_12} corresponds to a day index of {remainder_of_12} + "
         + f"{leap_year_addition} for the leap years, "
-        + f"for a result of {addition_beyond_mult_of_12}\n"
+        + f"for a result of {R}{addition_beyond_mult_of_12}",
+        True,
     )
 
+    # year
+    my_print(Y + "YEAR:")
     year_index = century_doomsday + addition_beyond_mult_of_12
     my_print(
         f"The century index of {century_doomsday} plus the decade "
         + f"index of {addition_beyond_mult_of_12} "
-        + f"results in a year index of {year_index} and a doomsday of {year_index % 7}\n"
+        + f"results in a year index of {year_index} and a doomsday of {R}{year_index % 7}",
+        True,
     )
 
     # month explanation
-    my_print("MONTH:")
+    my_print(Y + "MONTH:")
     month_doomsdays = {
         1: 3,
         2: 28,
@@ -92,20 +103,22 @@ def explain_logic(date):
     my_print(f"The month is {month}, so the doomsday falls on {month_doomsday}\n")
 
     # day explanation
-    my_print("DAY:")
+    my_print(Y + "DAY:")
     day_offset = day - month_doomsday
     effective_offset = day_offset % 7
     my_print(
-        f"The day offset is {day} - {month_doomsday} = {day_offset} -> {effective_offset}"
+        f"The day offset is {B}{day}{r} - {B}{month_doomsday}{r} = {B}{day_offset}{r} -> {R}{effective_offset}",
+        True,
     )
 
     # final result
+    my_print(Y + "RESULT:")
     result = (year_index + effective_offset) % 7
     my_print("Adding these together:")
     my_print(
         f"The year index of {year_index} plus the day offset of {effective_offset}"
     )
-    my_print(f"= {result}")
+    my_print(f"= {R}{result}", True)
 
 
 def my_print(text, newline=False):
