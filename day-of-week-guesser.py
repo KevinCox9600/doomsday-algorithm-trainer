@@ -26,16 +26,16 @@ def main():
 
             # validate the date
             day_of_week = (random_date.weekday() + 1) % 7
-            print(day_of_week)
+            my_print(day_of_week)
 
             if str(day_of_week) != i:
                 explain_logic(random_date)
             else:
-                print("That is correct!")
+                my_print("That is correct!")
 
             time.sleep(1)
         elif mode == "config":
-            print("this is not yet set up")
+            my_print("this is not yet set up")
             break
 
 
@@ -46,34 +46,34 @@ def explain_logic(date):
 
     # year explanation
     # century doomsday
-    print("CENTURY:")
+    my_print(Back.RED + "CENTURY:" + Style.RESET_ALL)
     century = year // 100
     century_doomsdays = {0: 2, 1: 0, 2: 5, 3: 3}
     century_doomsday = century_doomsdays[century % 4]
-    print(f"{century}00's doomsday is {century_doomsday}\n")
+    my_print(f"{century}00's doomsday is {century_doomsday}\n")
     # decade doomsday
     decade = year % 100
     mults_of_12 = decade // 12
     remainder_of_12 = decade % 12
     leap_year_addition = remainder_of_12 // 4
     addition_beyond_mult_of_12 = remainder_of_12 + leap_year_addition
-    print(f"The decade can be broken into {mults_of_12 * 12} + {remainder_of_12}")
-    print(f"The {mults_of_12 * 12} corresponds to a day index of {mults_of_12}")
-    print(
+    my_print(f"The decade can be broken into {mults_of_12 * 12} + {remainder_of_12}")
+    my_print(f"The {mults_of_12 * 12} corresponds to a day index of {mults_of_12}")
+    my_print(
         f"The {remainder_of_12} corresponds to a day index of {remainder_of_12} + "
         + f"{leap_year_addition} for the leap years, "
         + f"for a result of {addition_beyond_mult_of_12}\n"
     )
 
     year_index = century_doomsday + addition_beyond_mult_of_12
-    print(
+    my_print(
         f"The century index of {century_doomsday} plus the decade "
         + f"index of {addition_beyond_mult_of_12} "
         + f"results in a year index of {year_index} and a doomsday of {year_index % 7}\n"
     )
 
     # month explanation
-    print("MONTH:")
+    my_print("MONTH:")
     month_doomsdays = {
         1: 3,
         2: 28,
@@ -89,21 +89,30 @@ def explain_logic(date):
         12: 12,
     }
     month_doomsday = month_doomsdays[month]
-    print(f"The month is {month}, so the doomsday falls on {month_doomsday}\n")
+    my_print(f"The month is {month}, so the doomsday falls on {month_doomsday}\n")
 
     # day explanation
-    print("DAY:")
+    my_print("DAY:")
     day_offset = day - month_doomsday
     effective_offset = day_offset % 7
-    print(
+    my_print(
         f"The day offset is {day} - {month_doomsday} = {day_offset} -> {effective_offset}"
     )
 
     # final result
     result = (year_index + effective_offset) % 7
-    print("Adding these together:")
-    print(f"The year index of {year_index} plus the day offset of {effective_offset}")
-    print(f"= {result}")
+    my_print("Adding these together:")
+    my_print(
+        f"The year index of {year_index} plus the day offset of {effective_offset}"
+    )
+    my_print(f"= {result}")
+
+
+def my_print(text, newline=False):
+    """Reset print style after printing"""
+    print(str(text) + Style.RESET_ALL)
+    if newline:
+        print()
 
 
 def generate_random_date(start, end):
