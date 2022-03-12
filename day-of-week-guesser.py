@@ -48,13 +48,27 @@ def explain_logic(date):
     century = year // 100
     century_doomsdays = {0: 2, 1: 0, 2: 5, 3: 3}
     century_doomsday = century_doomsdays[century % 4]
-    print(f"{century}00's doomsday is {century_doomsday}")
+    print(f"{century}00's doomsday is {century_doomsday}\n")
     # decade doomsday
     decade = year % 100
     mults_of_12 = decade // 12
     remainder_of_12 = decade % 12
-    addition_beyond_mult_of_12 = 1
-    print(f"")
+    leap_year_addition = remainder_of_12 // 4
+    addition_beyond_mult_of_12 = remainder_of_12 + leap_year_addition
+    print(f"The decade can be broken into {mults_of_12 * 12} + {remainder_of_12}")
+    print(f"The {mults_of_12 * 12} corresponds to a day index of {mults_of_12}")
+    print(
+        f"The {remainder_of_12} corresponds to a day index of {remainder_of_12} +"
+        + f"{leap_year_addition} for the leap years,"
+        + f"for a result of {addition_beyond_mult_of_12}\n"
+    )
+
+    year_index = century_doomsday + addition_beyond_mult_of_12
+    print(
+        f"The century index of {century_doomsday} plus the decade"
+        + f" index of {addition_beyond_mult_of_12} "
+        + f"results in a year index of {year_index} and a doomsday of {year_index % 7}"
+    )
 
     # month explanation
     # day explanation
