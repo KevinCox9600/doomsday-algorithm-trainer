@@ -85,9 +85,11 @@ def explain_logic(date):
 
     # month explanation
     my_print(Y + "MONTH:")
+    # add extra day to jan/feb if leap year (year divisible by 4 but not 100)
+    leap_year_addition = 1 if decade % 4 == 0 and century % 4 != 0 else 0
     month_doomsdays = {
-        1: 3,
-        2: 28,
+        1: 3 + leap_year_addition,
+        2: 28 + leap_year_addition,
         3: 14,
         4: 4,
         5: 9,
@@ -100,6 +102,10 @@ def explain_logic(date):
         12: 12,
     }
     month_doomsday = month_doomsdays[month]
+    # add day to
+    month_doomsday += (
+        1 if decade % 4 == 0 and (century % 100 != 0 or century % 400 == 0) else None
+    )
     my_print(f"The month is {month}, so the doomsday falls on {month_doomsday}\n")
 
     # day explanation
