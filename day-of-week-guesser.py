@@ -1,6 +1,7 @@
 from random import randrange
 from datetime import timedelta, datetime
 import time
+from colorama import Fore, Back, Style
 
 
 def main():
@@ -45,6 +46,7 @@ def explain_logic(date):
 
     # year explanation
     # century doomsday
+    print("CENTURY:")
     century = year // 100
     century_doomsdays = {0: 2, 1: 0, 2: 5, 3: 3}
     century_doomsday = century_doomsdays[century % 4]
@@ -58,21 +60,50 @@ def explain_logic(date):
     print(f"The decade can be broken into {mults_of_12 * 12} + {remainder_of_12}")
     print(f"The {mults_of_12 * 12} corresponds to a day index of {mults_of_12}")
     print(
-        f"The {remainder_of_12} corresponds to a day index of {remainder_of_12} +"
-        + f"{leap_year_addition} for the leap years,"
+        f"The {remainder_of_12} corresponds to a day index of {remainder_of_12} + "
+        + f"{leap_year_addition} for the leap years, "
         + f"for a result of {addition_beyond_mult_of_12}\n"
     )
 
     year_index = century_doomsday + addition_beyond_mult_of_12
     print(
-        f"The century index of {century_doomsday} plus the decade"
-        + f" index of {addition_beyond_mult_of_12} "
-        + f"results in a year index of {year_index} and a doomsday of {year_index % 7}"
+        f"The century index of {century_doomsday} plus the decade "
+        + f"index of {addition_beyond_mult_of_12} "
+        + f"results in a year index of {year_index} and a doomsday of {year_index % 7}\n"
     )
 
     # month explanation
+    print("MONTH:")
+    month_doomsdays = {
+        1: 3,
+        2: 28,
+        3: 14,
+        4: 4,
+        5: 9,
+        6: 6,
+        7: 11,
+        8: 8,
+        9: 5,
+        10: 10,
+        11: 7,
+        12: 12,
+    }
+    month_doomsday = month_doomsdays[month]
+    print(f"The month is {month}, so the doomsday falls on {month_doomsday}\n")
+
     # day explanation
-    print("explained!")
+    print("DAY:")
+    day_offset = day - month_doomsday
+    effective_offset = day_offset % 7
+    print(
+        f"The day offset is {day} - {month_doomsday} = {day_offset} -> {effective_offset}"
+    )
+
+    # final result
+    result = (year_index + effective_offset) % 7
+    print("Adding these together:")
+    print(f"The year index of {year_index} plus the day offset of {effective_offset}")
+    print(f"= {result}")
 
 
 def generate_random_date(start, end):
