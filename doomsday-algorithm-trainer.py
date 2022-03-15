@@ -15,6 +15,7 @@ ANSWER_HISTORY_FILE = "history.txt"
 class Settings:
     mode = "menu"
     input = ""
+    format = "text"  # question date format
     quit = False
     timed = False
     hard_mode = True
@@ -35,16 +36,11 @@ def display_menu(settings):
     # TODO: allow printing stats
     print("What would you like to do?")
     print("1. Practice the doomsday method")
-    print("2. Test how fast you answer the questions")
-    print("3. Configure settings")
+    print("2. Configure settings")
     mode = input("> ")
     if mode == "1":
         settings.mode = "date"
-        settings.timed = False
     elif mode == "2":
-        settings.mode = "date"
-        settings.timed = True
-    elif mode == "3":
         settings.mode = "config"
     elif mode == "":
         settings.quit = True
@@ -56,6 +52,13 @@ def run_config_mode(settings):
     settings.mode = "date"
 
 
+def get_date_string(date, format="text"):
+    if format == "text":
+        return date.strftime("%B %d %Y")
+    elif format == "number":
+        return date.strftime("%m/%d/%Y")
+
+
 def run_date_mode(settings):
     # generate random date
     start_date = datetime(2000, 1, 1)
@@ -63,7 +66,7 @@ def run_date_mode(settings):
     random_date = generate_random_date(start_date, end_date)
 
     # ask user for date
-    date_string = random_date.strftime("%m/%d/%Y")
+    date_string = get_date_string(random_date, settings.format)
     start_time = time.time()
     print(
         f"What day of the week is {date_string}? Number 0-6 (sunday - monday)",
@@ -90,22 +93,24 @@ def run_date_mode(settings):
     time_elapsed = settings.timed and (end_time - start_time)
     if str(day_of_week) != settings.input:
         explain_logic(random_date)
-        record_answer(random_date, False, time_elapsed, settings.hard_mode)
+        record_answer(random_date, False, settings, time_elapsed)
     else:
         color_print("That is correct!")
-        record_answer(random_date, True, time_elapsed, settings.hard_mode)
+        record_answer(random_date, True, settings, time_elapsed)
 
     input("Press enter to continue")
     print("\n")
 
 
-def record_answer(date, correct, time_elapsed=None, hard_mode=True):
+def record_answer(date, correct, settings, time_elapsed=None):
     with open(ANSWER_HISTORY_FILE, "a") as f:
         date_string = date.strftime("%m/%d/%Y")
         correct_string = "correct" if correct else "incorrect"
         elapsed = round(time_elapsed, 1) if time_elapsed else "not-timed"
 
-        f.write(f"{date_string} {correct_string} {elapsed} {hard_mode}\n")
+        f.write(
+            f"{date_string} {correct_string} {elapsed} {settings.hard_mode} {settings.format}\n"
+        )
 
 
 def explain_logic(date):
