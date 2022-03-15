@@ -15,7 +15,6 @@ def main():
     while i != "q" and i != 0 and i != "":
         if mode == "date":
             mode, i = date_mode(mode, i)
-            time.sleep(1)
         elif mode == "config":
             color_print("this is not yet set up")
             mode = "date"
@@ -44,6 +43,9 @@ def date_mode(mode, i):
         explain_logic(random_date)
     else:
         color_print("That is correct!")
+
+    input("Press enter to continue")
+    print("\n")
 
     return mode, i
 
