@@ -10,3 +10,4 @@ Future Changes:
 - [ ] Add recording of what type of mistakes I made and what frequency they occurred
 - [ ] Add timer
 - [x] Add hard mode with disappearing text
+- [x] Allow changing date formats
