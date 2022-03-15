@@ -8,6 +8,8 @@ R = Back.RED
 Y = Back.YELLOW + Fore.BLACK
 r = Style.RESET_ALL
 
+ANSWER_HISTORY_FILE = "history.txt"
+
 
 def main():
     mode = "date"
@@ -41,13 +43,23 @@ def date_mode(mode, i):
 
     if str(day_of_week) != i:
         explain_logic(random_date)
+        record_answer(random_date, False)
     else:
         color_print("That is correct!")
+        record_answer(random_date, True)
 
     input("Press enter to continue")
     print("\n")
 
     return mode, i
+
+
+def record_answer(date, correct):
+    with open(ANSWER_HISTORY_FILE, "a") as f:
+        date_string = date.strftime("%m/%d/%Y")
+        correct_string = "correct" if correct else "incorrect"
+
+        f.write(f"{date_string} {correct_string}\n")
 
 
 def explain_logic(date):
