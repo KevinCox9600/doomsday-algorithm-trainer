@@ -43,6 +43,8 @@ def display_menu(settings):
         settings.timed = True
     elif mode == "3":
         settings.mode = "config"
+    elif mode == "":
+        settings.quit = True
 
 
 def run_config_mode(settings):
@@ -67,14 +69,16 @@ def run_date_mode(settings):
     # switch to config mode if necessary
     if settings.input == "c":
         settings.mode = "config"
+        return
     elif settings.input == "q" or settings.input == 0 or settings.input == "":
         settings.quit = True
+        return
 
     # validate the date
     day_of_week = (random_date.weekday() + 1) % 7
     color_print(day_of_week)
 
-    # calculate time elapsed
+    # record the answer and print explanation if necessary
     time_elapsed = settings.timed and (end_time - start_time)
     if str(day_of_week) != settings.input:
         explain_logic(random_date)
