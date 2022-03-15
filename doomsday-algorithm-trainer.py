@@ -11,18 +11,23 @@ r = Style.RESET_ALL
 ANSWER_HISTORY_FILE = "history.txt"
 
 
-def main():
+class Settings:
     mode = "date"
-    i = "init"
-    while i != "q" and i != 0 and i != "":
-        if mode == "date":
-            mode, i = date_mode(mode, i)
-        elif mode == "config":
+    input = ""
+    quit = False
+
+
+def main():
+    settings = Settings()
+    while not settings.quit:
+        if settings.mode == "date":
+            date_mode(settings)
+        elif settings.mode == "config":
             color_print("this is not yet set up")
-            mode = "date"
+            settings.mode = "date"
 
 
-def date_mode(mode, i):
+def date_mode(settings):
     # generate random date
     start_date = datetime(2000, 1, 1)
     end_date = datetime(2003, 12, 31)
@@ -30,18 +35,21 @@ def date_mode(mode, i):
 
     # ask user for date
     date_string = random_date.strftime("%m/%d/%Y")
-    i = input(f"What day of the week is {date_string}? Number 0-6 (sunday - monday)\n")
+    settings.input = input(
+        f"What day of the week is {date_string}? Number 0-6 (sunday - monday)\n"
+    )
 
     # switch to config mode if necessary
-    if i == "c":
-        mode = "config"
-        return mode, i
+    if settings.input == "c":
+        settings.mode = "config"
+    elif settings.input == "q" or settings.input == 0 or settings.input == "":
+        settings.quit = True
 
     # validate the date
     day_of_week = (random_date.weekday() + 1) % 7
     color_print(day_of_week)
 
-    if str(day_of_week) != i:
+    if str(day_of_week) != settings.input:
         explain_logic(random_date)
         record_answer(random_date, False)
     else:
@@ -50,8 +58,6 @@ def date_mode(mode, i):
 
     input("Press enter to continue")
     print("\n")
-
-    return mode, i
 
 
 def record_answer(date, correct):
