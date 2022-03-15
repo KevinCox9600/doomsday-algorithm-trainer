@@ -9,3 +9,4 @@ Future Changes:
 - [ ] Add statistics view of results history
 - [ ] Add recording of what type of mistakes I made and what frequency they occurred
 - [ ] Add timer
+- [x] Add hard mode with disappearing text
