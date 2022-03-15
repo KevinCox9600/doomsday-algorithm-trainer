@@ -1,6 +1,7 @@
 from random import randrange
 from datetime import timedelta, datetime
 import time
+import sys
 from colorama import Fore, Back, Style
 
 B = ""  # Back.MAGENTA  # + Fore.CYAN
@@ -16,6 +17,7 @@ class Settings:
     input = ""
     quit = False
     timed = False
+    hard_mode = True
 
 
 def main():
@@ -30,6 +32,7 @@ def main():
 
 
 def display_menu(settings):
+    # TODO: allow printing stats
     print("What would you like to do?")
     print("1. Practice the doomsday method")
     print("2. Test how fast you answer the questions")
@@ -48,6 +51,7 @@ def display_menu(settings):
 
 
 def run_config_mode(settings):
+    # TODO: allow setting hard mode (see question for limited time), timing, date format
     color_print("this is not yet set up")
     settings.mode = "date"
 
@@ -61,9 +65,13 @@ def run_date_mode(settings):
     # ask user for date
     date_string = random_date.strftime("%m/%d/%Y")
     start_time = time.time()
-    settings.input = input(
-        f"What day of the week is {date_string}? Number 0-6 (sunday - monday)\n"
+    print(
+        f"What day of the week is {date_string}? Number 0-6 (sunday - monday)",
+        end="\r",
     )
+    time.sleep(3)
+    sys.stdout.write("\033[K")
+    settings.input = input("> ")
     end_time = time.time()
 
     # switch to config mode if necessary
@@ -82,22 +90,22 @@ def run_date_mode(settings):
     time_elapsed = settings.timed and (end_time - start_time)
     if str(day_of_week) != settings.input:
         explain_logic(random_date)
-        record_answer(random_date, False, time_elapsed)
+        record_answer(random_date, False, time_elapsed, settings.hard_mode)
     else:
         color_print("That is correct!")
-        record_answer(random_date, True, time_elapsed)
+        record_answer(random_date, True, time_elapsed, settings.hard_mode)
 
     input("Press enter to continue")
     print("\n")
 
 
-def record_answer(date, correct, time_elapsed=None):
+def record_answer(date, correct, time_elapsed=None, hard_mode=True):
     with open(ANSWER_HISTORY_FILE, "a") as f:
         date_string = date.strftime("%m/%d/%Y")
         correct_string = "correct" if correct else "incorrect"
-        elapsed = round(time_elapsed, 1) if time_elapsed else ""
+        elapsed = round(time_elapsed, 1) if time_elapsed else "not-timed"
 
-        f.write(f"{date_string} {correct_string} {elapsed}\n")
+        f.write(f"{date_string} {correct_string} {elapsed} {hard_mode}\n")
 
 
 def explain_logic(date):
