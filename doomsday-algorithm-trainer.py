@@ -61,7 +61,7 @@ def get_date_string(date, format="text"):
 
 def run_date_mode(settings):
     # generate random date
-    start_date = datetime(2000, 1, 1)
+    start_date = datetime(1999, 1, 1)
     end_date = datetime(2003, 12, 31)
     random_date = generate_random_date(start_date, end_date)
 
@@ -132,23 +132,26 @@ def explain_logic(date):
     remainder_of_12 = decade % 12
     leap_year_addition = remainder_of_12 // 4
     addition_beyond_mult_of_12 = remainder_of_12 + leap_year_addition
+    raw_decade_offset = addition_beyond_mult_of_12 + mults_of_12
+    decade_offset = raw_decade_offset % 7
     color_print(f"The decade can be broken into {mults_of_12 * 12} + {remainder_of_12}")
     color_print(
         f"The {mults_of_12 * 12} corresponds to a day index of {B}{mults_of_12}"
     )
     color_print(
-        f"The {remainder_of_12} corresponds to a day index of {remainder_of_12} + "
+        f"The decade index corresponds to the multiple of 12 ({mults_of_12}) "
+        + f"plus a day index of {remainder_of_12} + "
         + f"{leap_year_addition} for the leap years, "
-        + f"for a result of {R}{addition_beyond_mult_of_12}",
+        + f"for a result of {raw_decade_offset} mod 7 = {R}{decade_offset}",
         True,
     )
 
     # year
     color_print(Y + "YEAR:")
-    year_index = century_doomsday + addition_beyond_mult_of_12
+    year_index = century_doomsday + decade_offset
     color_print(
         f"The century index of {century_doomsday} plus the decade "
-        + f"index of {addition_beyond_mult_of_12} "
+        + f"index of {decade_offset} "
         + f"results in a year index of {year_index} and a doomsday of {R}{year_index % 7}",
         True,
     )
@@ -208,7 +211,7 @@ def color_print(text, newline=False):
 def generate_random_date(start, end):
     delta = end - start
     int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
-    random_second = randrange(int_delta)
+    random_second = randrange(int_delta) if int_delta else 0
     return start + timedelta(seconds=random_second)
 
 
