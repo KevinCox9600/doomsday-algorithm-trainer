@@ -11,27 +11,8 @@ r = Style.RESET_ALL
 
 ANSWER_HISTORY_FILE = "history.txt"
 
-
-class Settings:
-    mode = "menu"
-    input = ""
-    format = "text"  # question date format
-    quit = False
-    timed = False
-    hard_mode = True
-
-
-def main():
-    settings = Settings()
-    while not settings.quit:
-        if settings.mode == "menu":
-            display_menu(settings)
-        if settings.mode == "date":
-            run_date_mode(settings)
-        elif settings.mode == "config":
-            run_config_mode(settings)
-
-
+# ------------------------
+# mode related functions
 def display_menu(settings):
     # TODO: allow printing stats
     print("What would you like to do?")
@@ -46,19 +27,7 @@ def display_menu(settings):
         settings.quit = True
 
 
-def run_config_mode(settings):
-    # TODO: allow setting hard mode (see question for limited time), timing, date format
-    color_print("this is not yet set up")
-    settings.mode = "date"
-
-
-def get_date_string(date, format="text"):
-    if format == "text":
-        return date.strftime("%B %d %Y")
-    elif format == "number":
-        return date.strftime("%m/%d/%Y")
-
-
+# -------------------------
 def run_date_mode(settings):
     # generate random date
     start_date = datetime(1999, 1, 1)
@@ -100,6 +69,79 @@ def run_date_mode(settings):
 
     input("Press enter to continue")
     print("\n")
+
+
+# ---------------------------
+
+
+def run_config_mode(settings):
+    # TODO: allow setting hard mode (see question for limited time), timing, date format
+    color_print("this is not yet set up")
+    settings.mode = "menu"
+
+
+# -----------------------------------
+class Mode:
+    def __init__(self, mode_title, mode_function):
+        self.mode_title = mode_title
+        self.mode_function = mode_function
+
+    def can_be_called(self, current_setting_mode):
+        return current_setting_mode == self.mode_title
+
+    def call_mode_function(self, settings):
+        self.mode_function(settings)
+
+
+# modes
+menu_mode = Mode(mode_title="menu", mode_function=display_menu)
+date_mode = Mode(mode_title="date", mode_function=run_date_mode)
+config_mode = Mode(mode_title="config", mode_function=run_config_mode)
+modes = [menu_mode, date_mode, config_mode]
+# -----------------------------------
+class Settings:
+    def __init__(
+        self,
+        mode="menu",
+        input="",
+        format="text",
+        quit=False,
+        timed=False,
+        hard_mode=True,
+    ):
+        self.mode = mode
+        self.input = input
+        self.format = format
+        self.quit = quit
+        self.timed = timed
+        self.hard_mode = hard_mode
+
+
+# -----------------------------------
+def run_any_mode_if_called(settings):
+    for i1 in modes:
+        if i1.can_be_called(settings.mode):
+            i1.call_mode_function(settings)
+            break
+
+
+# -----------------------------------
+
+
+def main():
+    settings = Settings()
+    while not settings.quit:
+        run_any_mode_if_called(settings)
+
+
+# -----------------------------------
+
+
+def get_date_string(date, format="text"):
+    if format == "text":
+        return date.strftime("%B %d %Y")
+    elif format == "number":
+        return date.strftime("%m/%d/%Y")
 
 
 def record_answer(date, correct, settings, time_elapsed=None):
