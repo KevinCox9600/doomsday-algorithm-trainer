@@ -10,7 +10,52 @@ Y = Back.YELLOW + Fore.BLACK
 r = Style.RESET_ALL
 
 ANSWER_HISTORY_FILE = "history.txt"
+#-------------------------
+class TimeOutForInputTaking():
+    #this class is something like None
+    #all None are equal
+    #All None are will return True for "None is None"
+    #its just like that
 
+    THAT_OBJECT = None
+    """
+    fact:
+        this class doent make any instance more than once
+        it makes an instance at first time (which is 'THAT_OBJECT')
+        then returns it all the other times when
+        you request an instance from it
+    """
+
+
+    def __init__(self):
+        if self.__class__.THAT_OBJECT  == None:
+            self.__class__.THAT_OBJECT = self
+        else:
+            return self.__class__.THAT_OBJECT
+
+
+    def __eq__(self, b):
+        return self.__class__ == b.__class__
+#--------------------------------------------------
+def input_with_time_out(delay):
+    #it doenst do anything beyond what its name say
+    #it wont print guidning text
+    #nor will do anything for timing out
+    #all these actions mus tbe handled
+    #by considering what this function will output
+    #it will output an isntance of TimeOutForInputTaking for timing out cases
+    output = ""
+    time_started = time.time()
+
+    while True:
+        if msvcrt.kbhit():
+            x=input()
+            return input
+
+        if time_started <= time.time()-delay:
+            break
+
+    return TimeOutForInputTaking()
 # ------------------------
 # mode related functions
 def display_menu(settings):
