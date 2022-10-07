@@ -14,7 +14,7 @@ ANSWER_HISTORY_FILE = "history.txt"
 class TimeOutForInputTaking():
     #this class is something like None
     #all None are equal
-    #All None are will return True for "None is None"
+    #All None will return True for "None is None"
     #its just like that
 
     THAT_OBJECT = None
